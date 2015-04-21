@@ -1,8 +1,9 @@
 #!/usr/bin/env sh
 set -e
 
-APP_URL="$1"
-CALLBACK_URL="$2"
+TOOL="$1"
+APP_URL="$2"
+CALLBACK_URL="$3"
 
 [ -z "${GET_TIMEOUT}" ] && GET_TIMEOUT=30
 [ -z "${POST_TIMEOUT}" ] && POST_TIMEOUT=10
