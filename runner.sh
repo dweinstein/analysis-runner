@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 set -e
 
-TOOL="$1"
+[ -z "${TOOL}" ] && TOOL="$1"
 APP_URL="$2"
 CALLBACK_URL="$3"
 
