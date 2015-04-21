@@ -29,11 +29,11 @@ if [ -n "${CALLBACK_URL}" ]; then
 
   [ -z "${CONTENT_TYPE}" ] && echo "must provide content type"
 
-  exec "${TOOL}" "${INPUT_PATH}" | \
+  "${TOOL}" "${INPUT_PATH}" | \
       ${CURL} -m ${POST_TIMEOUT} -s \
       -XPOST "${CALLBACK_URL}" \
       -H "Content-Type: ${CONTENT_TYPE}" \
       --data-binary @-
 else
-  exec "${TOOL}" "${INPUT_PATH}"
+  "${TOOL}" "${INPUT_PATH}"
 fi
