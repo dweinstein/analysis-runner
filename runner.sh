@@ -35,5 +35,5 @@ if [ -n "${CALLBACK_URL}" ]; then
       -H "Content-Type: ${CONTENT_TYPE}" \
       --data-binary @-
 else
-  exec ${TOOL} "${INPUT_PATH}"
+  exec "${TOOL}" "${INPUT_PATH}"
 fi
