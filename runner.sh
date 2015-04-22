@@ -18,7 +18,7 @@ case "${APP_URL}" in
 -|'')
   cat > "${INPUT_PATH}" || exit 1
   ;;
-http*)
+http:*|https:*)
   ${CURL} -m ${GET_TIMEOUT} -so "${INPUT_PATH}" "${APP_URL}" || exit 1
   ;;
 *)
