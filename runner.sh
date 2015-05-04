@@ -30,7 +30,9 @@ if [ -n "${CALLBACK_URL}" ]; then
 
   [ -z "${CONTENT_TYPE}" ] && echo "must provide content type"
 
-  ${TOOL} "${INPUT_PATH}" > "${TMPDIR}/stdout" || exit 1
+  ${TOOL} "${INPUT_PATH}" > "${TMPDIR}/stdout" || \
+    cat "${TMPDIR}/stdout" && exit 1
+
   exec cat "${TMPDIR}/stdout" | \
       ${CURL} -m ${POST_TIMEOUT} -s \
       -XPOST "${CALLBACK_URL}" \
