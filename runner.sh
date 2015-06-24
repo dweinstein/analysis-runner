@@ -5,6 +5,18 @@ set -e
 APP_URL="$2"
 CALLBACK_URL="$3"
 
+
+while [ $# -gt 0 ]
+do
+    case "$1" in
+        --*) ADDEDARGS="${ADDEDARGS} $1"
+            ;;
+        -*) ADDEDARGS="${ADDEDARGS} $1 $2"
+            ;;
+    esac
+    shift
+done
+
 [ -z "${GET_TIMEOUT}" ] && GET_TIMEOUT=30
 [ -z "${POST_TIMEOUT}" ] && POST_TIMEOUT=10
 [ -z "${TOOL}" ] && echo "must provide tool for analysis" && exit 1
@@ -26,11 +38,12 @@ http:*|https:*)
   ;;
 esac
 
+
 if [ -n "${CALLBACK_URL}" ]; then
 
   [ -z "${CONTENT_TYPE}" ] && echo "must provide content type"
 
-  ${TOOL} "${INPUT_PATH}" > "${TMPDIR}/stdout" || \
+  ${TOOL} "${INPUT_PATH}" ${ADDEDARGS} > "${TMPDIR}/stdout" || \
     cat "${TMPDIR}/stdout" && exit 1
 
   exec cat "${TMPDIR}/stdout" | \
@@ -39,5 +52,5 @@ if [ -n "${CALLBACK_URL}" ]; then
       -H "Content-Type: ${CONTENT_TYPE}" \
       --data-binary @-
 else
-  exec ${TOOL} "${INPUT_PATH}"
+  exec ${TOOL} "${INPUT_PATH}" ${ADDEDARGS};
 fi
