@@ -5,16 +5,30 @@ set -e
 APP_URL="$2"
 CALLBACK_URL="$3"
 
-
+# Handle extra args to add to final call with the tool
 while [ $# -gt 0 ]
 do
     case "$1" in
-        --*) ADDEDARGS="${ADDEDARGS} $1"
+        # Not interesting
+        --) continue
             ;;
-        -*) ADDEDARGS="${ADDEDARGS} $1 $2"
+        # Very interesting
+        -*) case "$2" in
+                # Another flag next --bloop=it -d
+                -*) ADDEDARGS="${ADDEDARGS} $1"; shift
+                    ;;
+                # A flag and a space separated value --bloop it
+                [a-z]*|[0-9]*|/*) ADDEDARGS="${ADDEDARGS} $1 $2"; shift 2
+                    ;;
+                # Nothing following just add and shift
+                *) ADDEDARGS="${ADDEDARGS} $1";shift
+                    ;;
+            esac
+            ;;
+        *) shift;
+            continue
             ;;
     esac
-    shift
 done
 
 [ -z "${GET_TIMEOUT}" ] && GET_TIMEOUT=30
@@ -27,17 +41,28 @@ done
 
 INPUT_PATH="${TMPDIR}/target.app"
 case "${APP_URL}" in
--|'')
-  cat > "${INPUT_PATH}" || exit 1
-  ;;
-http:*|https:*)
-  ${CURL} -m ${GET_TIMEOUT} -so "${INPUT_PATH}" "${APP_URL}" || exit 1
-  ;;
-*)
-  [ -f "${APP_URL}" ] && cp "${APP_URL}" "${INPUT_PATH}" || exit 1
-  ;;
+  -|'')
+    cat > "${INPUT_PATH}" || exit 1
+    ;;
+  http:*|https:*)
+    ${CURL} -m ${GET_TIMEOUT} -so "${INPUT_PATH}" "${APP_URL}" || exit 1
+    ;;
+  *)
+    [ -f "${APP_URL}" ] && cp "${APP_URL}" "${INPUT_PATH}" || exit 1
+    ;;
 esac
 
+case "${CALLBACK_URL}" in
+  -|--|'')
+    CALLBACK_URL="";
+    ;;
+  http:*|https:*)
+    continue;
+    ;;
+  *)
+    CALLBACK_URL="";
+    ;;
+esac
 
 if [ -n "${CALLBACK_URL}" ]; then
 
@@ -52,6 +77,5 @@ if [ -n "${CALLBACK_URL}" ]; then
       -H "Content-Type: ${CONTENT_TYPE}" \
       --data-binary @-
 else
-  echo ${TOOL} "${INPUT_PATH}" ${ADDEDARGS};
   exec ${TOOL} "${INPUT_PATH}" ${ADDEDARGS};
 fi
