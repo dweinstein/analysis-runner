@@ -52,5 +52,6 @@ if [ -n "${CALLBACK_URL}" ]; then
       -H "Content-Type: ${CONTENT_TYPE}" \
       --data-binary @-
 else
+  echo ${TOOL} "${INPUT_PATH}" ${ADDEDARGS};
   exec ${TOOL} "${INPUT_PATH}" ${ADDEDARGS};
 fi
