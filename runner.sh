@@ -55,7 +55,7 @@ if [ -z "${CALLBACK_URL}" ]; then
  exec ${TOOL} "$@" "${INPUT_PATH}"
 else
   [ -z "${CONTENT_TYPE}" ] && \
-  echo "must provide content type for callbacks" && exit 1
+  echo "must provide content type for callbacks" >&2 && exit 1
   ${TOOL} "$@" "${INPUT_PATH}" > "${OUTPUT_PATH}" 2> "${STDERR_PATH}"
   RET=$?
   [ ! ${RET} -eq 0 ] && \
