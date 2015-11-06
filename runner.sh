@@ -42,7 +42,10 @@ case "${IN_URL}" in
     cat - > "${INPUT_PATH}" || exit 1
     ;;
   http:*|https:*)
-    ${CURL} -m ${GET_TIMEOUT} -s -o "${INPUT_PATH}" "${IN_URL}"
+    ${CURL} -f -m ${GET_TIMEOUT} -s -o "${INPUT_PATH}" "${IN_URL}"
+    RET=$?
+    [ ! ${RET} -eq 0 ] && \
+    echo "curl returned non-zero code: ${RET}" >&2 && exit ${RET}
     ;;
   *)
     # if it's just a file, symlink it
