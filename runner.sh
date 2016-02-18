@@ -26,8 +26,7 @@ done
 
 shift $(( OPTIND - 1 ));
 
-# use a ramfs if possible for storing the app
-[ -z "${TMPDIR}"       ] && TMPDIR=/dev/shm
+[ -z "${TMPDIR}"       ] && TMPDIR=/tmp
 # default values if not provided
 [ -z "${GET_TIMEOUT}"  ] && GET_TIMEOUT=30
 [ -z "${POST_TIMEOUT}" ] && POST_TIMEOUT=10
