@@ -28,8 +28,8 @@ shift $(( OPTIND - 1 ));
 
 [ -z "${TMPDIR}"       ] && TMPDIR=/tmp
 # default values if not provided
-[ -z "${GET_TIMEOUT}"  ] && GET_TIMEOUT=30
-[ -z "${POST_TIMEOUT}" ] && POST_TIMEOUT=10
+[ -z "${GET_TIMEOUT}"  ] && GET_TIMEOUT=600
+[ -z "${POST_TIMEOUT}" ] && POST_TIMEOUT=600
 [ -z "${CURL}"         ] && CURL=curl
 [ -z "${INPUT_PATH}"   ] && INPUT_PATH="${TMPDIR}/stdin"
 [ -z "${OUTPUT_PATH}"  ] && OUTPUT_PATH="${TMPDIR}/stdout"
