@@ -52,13 +52,16 @@ case "${IN_URL}" in
     ;;
 esac
 
+# export the INPUT_PATH for down-stream consumer
+export INPUT_PATH
+
 # Process the input
 if [ -z "${CALLBACK_URL}" ]; then
- exec ${TOOL} "$@" "${INPUT_PATH}"
+ exec ${TOOL} "$@"
 else
   [ -z "${CONTENT_TYPE}" ] && \
   echo "must provide content type for callbacks" >&2 && exit 1
-  ${TOOL} "$@" "${INPUT_PATH}" > "${OUTPUT_PATH}" 2> "${STDERR_PATH}"
+  ${TOOL} "$@" > "${OUTPUT_PATH}" 2> "${STDERR_PATH}"
   RET=$?
   [ ! ${RET} -eq 0 ] && \
     cat ${OUTPUT_PATH} >&1 && cat ${STDERR_PATH} >&2 && exit ${RET}
